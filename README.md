@@ -2,9 +2,11 @@
 
 Ground Truth is a Mac dashboard for exploring your Garmin sleep, HRV, recovery, and activities. It stores a rolling 30-day snapshot locally.
 
-## Try the Mac preview
+## Install the Mac beta
 
-1. Unzip the **Ground Truth macOS preview** download and open **Ground Truth.app**. It runs on Apple silicon or Intel with macOS 13 or newer.
+[Download Ground Truth 0.1.3 for macOS](https://github.com/1JRobertson/ground-truth/releases/download/v0.1.3/Ground-Truth-macOS-preview-0.1.3.zip)
+
+1. Unzip the download and open **Ground Truth.app**. It runs on Apple silicon or Intel with macOS 13 or newer.
 2. Select **Try demo** to browse synthetic data, or **Create Garmin key** to open Garmin Connect in your browser.
 3. In Garmin Connect, sign in and choose **Create Key**. Pick an expiration and copy the key. Back in Ground Truth, choose **Enter key** and paste it into the macOS prompt.
 4. Use **Sync now** after your watch syncs with Garmin Connect. Open **Garmin** in the dashboard to check the date range, replace an expired key, or disconnect.
