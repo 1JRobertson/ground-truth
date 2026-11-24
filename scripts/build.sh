@@ -3,6 +3,8 @@ set -euo pipefail
 
 root="$(cd "$(dirname "$0")/.." && pwd)"
 out="${GROUND_TRUTH_BUILD_DIR:-$root/dist}"
+version="$(plutil -extract CFBundleShortVersionString raw -o - "$root/packaging/Info.plist")"
+archive="Ground-Truth-macOS-preview-$version.zip"
 staging="$(mktemp -d "${TMPDIR:-/tmp}/ground-truth-build.XXXXXX")"
 trap 'rm -rf "$staging"' EXIT
 
@@ -22,7 +24,7 @@ done
 xcrun lipo -create "$staging"/GroundTruth-{arm64,x86_64} -output "$binary"
 codesign --force --sign - "$app"
 codesign --verify --strict "$app"
-ditto -c -k --norsrc --noextattr --noacl --keepParent "$app" "$staging/Ground-Truth-macOS-preview.zip"
-mv "$staging/Ground-Truth-macOS-preview.zip" "$out/Ground-Truth-macOS-preview.zip"
-(cd "$out" && LC_ALL=C shasum -a 256 Ground-Truth-macOS-preview.zip > SHA256SUMS.txt)
-echo "$out/Ground-Truth-macOS-preview.zip"
+ditto -c -k --norsrc --noextattr --noacl --keepParent "$app" "$staging/$archive"
+mv "$staging/$archive" "$out/$archive"
+(cd "$out" && LC_ALL=C shasum -a 256 "$archive" > SHA256SUMS.txt)
+echo "$out/$archive"

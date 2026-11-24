@@ -93,10 +93,10 @@ struct GarminDaily: Decodable {
 }
 
 struct GarminSleep: Decodable {
-    let calendarDate: String
+    let calendarDate: String?
     let sleepTimeSeconds: Double?
-    let sleepStartTimestampGMT: String?
-    let sleepEndTimestampGMT: String?
+    let sleepStartTimestampGMT: GarminGMTTimestamp?
+    let sleepEndTimestampGMT: GarminGMTTimestamp?
     let deepSleepSeconds: Double?
     let lightSleepSeconds: Double?
     let remSleepSeconds: Double?
@@ -108,6 +108,23 @@ struct GarminSleep: Decodable {
     struct Scores: Decodable {
         let overall: Score?
         struct Score: Decodable { let value: Double? }
+    }
+}
+
+struct GarminGMTTimestamp: Decodable {
+    let iso8601: String?
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let date: Date?
+        if let milliseconds = try? container.decode(Double.self), milliseconds.isFinite {
+            date = Date(timeIntervalSince1970: milliseconds / 1000)
+        } else if let timestamp = try? container.decode(String.self) {
+            date = parseGarminGMT(timestamp)
+        } else {
+            date = nil
+        }
+        iso8601 = date.map(ISO8601DateFormatter().string(from:))
     }
 }
 
@@ -155,9 +172,9 @@ func normalizeDashboard(days: RecentDays, daily: GarminDaily, sleep: [GarminSlee
     }
 
     for item in sleep {
-        guard var row = rows[item.calendarDate] else { continue }
-        let start = garminGMT(item.sleepStartTimestampGMT)
-        let end = garminGMT(item.sleepEndTimestampGMT)
+        guard let date = item.calendarDate, var row = rows[date] else { continue }
+        let start = item.sleepStartTimestampGMT?.iso8601
+        let end = item.sleepEndTimestampGMT?.iso8601
         if let existingEnd = row.sleepEndTimestamp, (end ?? "") < existingEnd { continue }
         row.sleepStartTimestamp = start
         row.sleepEndTimestamp = end
@@ -211,14 +228,12 @@ private func valid(_ value: Double?, in range: ClosedRange<Double>) -> Double? {
     return value
 }
 
-private func garminGMT(_ value: String?) -> String? {
-    guard let value else { return nil }
+private func parseGarminGMT(_ value: String) -> Date? {
     var iso = value.replacingOccurrences(of: " ", with: "T")
     if iso.range(of: "(Z|[+-]\\d{2}:?\\d{2})$", options: .regularExpression) == nil { iso += "Z" }
     let formatter = ISO8601DateFormatter()
     formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-    var parsed = formatter.date(from: iso)
+    if let date = formatter.date(from: iso) { return date }
     formatter.formatOptions = [.withInternetDateTime]
-    parsed = parsed ?? formatter.date(from: iso)
-    return parsed.map(formatter.string(from:))
+    return formatter.date(from: iso)
 }

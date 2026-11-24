@@ -71,7 +71,11 @@ struct ContractTests {
                 """)
             case "/sleep-service/sleep/dailySleepSummariesByDate":
                 return (200, """
-                [{"calendarDate":"2024-07-29","sleepStartTimestampGMT":"2024-07-28 23:00:00.0","sleepEndTimestampGMT":"2024-07-29T07:00:00Z","sleepTimeSeconds":28800,"deepSleepSeconds":7200,"remSleepSeconds":7200,"sleepScores":{"overall":{"value":83,"qualifierKey":"GOOD"}},"userNote":"synthetic private note"}]
+                [
+                    {"calendarDate":"2024-07-29","sleepStartTimestampGMT":"2024-07-28 23:00:00.0","sleepEndTimestampGMT":"2024-07-29T07:00:00Z","sleepTimeSeconds":28800,"deepSleepSeconds":7200,"remSleepSeconds":7200,"sleepScores":{"overall":{"value":83,"qualifierKey":"GOOD"}},"userNote":"synthetic private note"},
+                    {"calendarDate":null,"sleepStartTimestampGMT":1722294900000,"sleepEndTimestampGMT":1722321900000,"sleepScores":{"overall":{"value":100}}},
+                    {"calendarDate":"2024-07-30","sleepStartTimestampGMT":1722294900000,"sleepEndTimestampGMT":1722321900000,"sleepTimeSeconds":27000,"sleepScores":{"overall":{"value":78}}}
+                ]
                 """)
             case "/hrv-service/hrv/daily/2024-07-01/2024-07-30":
                 return (200, """
@@ -94,7 +98,12 @@ struct ContractTests {
         let result = try await client.sync(key: "fake-api-key", days: days)
         let row = result.historySeries[28]
         try expect(row.sleepScore == 83 && row.sleepHours == 8 && row.sleepDeepPercent == 25 &&
-                   row.sleepStartTimestamp == "2024-07-28T23:00:00Z", "Sleep fields did not map")
+                   row.sleepStartTimestamp == "2024-07-28T23:00:00Z" &&
+                   row.sleepEndTimestamp == "2024-07-29T07:00:00Z", "Sleep with timestamp strings did not map")
+        let numericSleep = result.historySeries[29]
+        try expect(numericSleep.sleepScore == 78 && numericSleep.sleepHours == 7.5 &&
+                   numericSleep.sleepStartTimestamp == "2024-07-29T23:15:00Z" &&
+                   numericSleep.sleepEndTimestamp == "2024-07-30T06:45:00Z", "Sleep with Unix milliseconds did not map")
         try expect(row.overnightHrv == 45 && row.hrvWeeklyAverage == 43, "HRV fields did not map")
         try expect(row.steps == 6132 && row.restingHr == 56 && row.intensityMinutes == 27 && row.bodyBatteryHigh == 87,
                    "Daily fields did not map")
@@ -103,8 +112,8 @@ struct ContractTests {
         try expect(result.activities.count == 1 && result.activities[0].durationMinutes == 30 &&
                    result.activities[0].distanceKm == 3.9 && result.activities[0].type == "Trail Running",
                    "Activity mapping, units, or de-duplication failed")
-        try expect(result.coverage.dailyRecords == 1 && result.coverage.hrvRecords == 1 && result.coverage.sleepRecords == 1,
-                   "Coverage counts metadata or gaps")
+        try expect(result.coverage.dailyRecords == 1 && result.coverage.hrvRecords == 1 && result.coverage.sleepRecords == 2,
+                   "Coverage counts metadata, undated records, or gaps")
         let serialized = String(decoding: try JSONEncoder().encode(result), as: UTF8.self)
         try expect(!["Synthetic Owner", "private note", "startLatitude", "userProfilePk", "fake-api-key"].contains(where: serialized.contains),
                    "Unneeded private fields leaked into the snapshot")

@@ -4,7 +4,7 @@ Ground Truth is a Mac dashboard for exploring your Garmin sleep, HRV, recovery, 
 
 ## Try the Mac preview
 
-1. Unzip **Ground-Truth-macOS-preview.zip** and open **Ground Truth.app**. It runs on Apple silicon or Intel with macOS 13 or newer.
+1. Unzip the **Ground Truth macOS preview** download and open **Ground Truth.app**. It runs on Apple silicon or Intel with macOS 13 or newer.
 2. Select **Try demo** to browse synthetic data, or **Create Garmin key** to open Garmin Connect in your browser.
 3. In Garmin Connect, sign in and choose **Create Key**. Pick an expiration and copy the key. Back in Ground Truth, choose **Enter key** and paste it into the macOS prompt.
 4. Use **Sync now** after your watch syncs with Garmin Connect. Open **Garmin** in the dashboard to check the date range, replace an expired key, or disconnect.
@@ -28,6 +28,6 @@ Install the macOS Command Line Tools on a development Mac, then run:
 ./scripts/build.sh
 ```
 
-The build writes a universal ZIP and its SHA-256 checksum to `dist/`. The app uses macOS system frameworks and needs no runtimes installed by users. `./scripts/web-smoke.sh` runs the native WebKit smoke test on a Mac with an active GUI session. Tests use synthetic data and have no need for a Garmin account.
+The build writes a versioned universal ZIP and its SHA-256 checksum to `dist/`. The app uses macOS system frameworks and needs no runtimes installed by users. `./scripts/web-smoke.sh` runs the native WebKit smoke test on a Mac with an active GUI session. Tests use synthetic data and have no need for a Garmin account.
 
 [MIT License](LICENSE)
