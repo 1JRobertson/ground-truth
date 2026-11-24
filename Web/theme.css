@@ -1,0 +1,216 @@
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ink: #e5ede8;
+  --muted: #a6b4ad;
+  --paper: #111815;
+  --card: #1a241f;
+  --line: #304036;
+  --sidebar: #141d18;
+  --surface-raised: #28362e;
+  --surface-quiet: #202c25;
+  --line-strong: #4a5d51;
+  --mint-surface: #243b30;
+  --mint-border: #426553;
+  --mint-ink: #a4d3ba;
+  --danger-ink: #f5a497;
+  --theme-hover: var(--surface-raised);
+}
+
+.theme-picker {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 35px;
+  height: 34px;
+  border-radius: 6px;
+  color: var(--chart-ink, var(--ink));
+}
+
+.theme-picker:hover {
+  background: var(--chart-hover, var(--theme-hover, #e9ede8));
+}
+
+.theme-picker:focus-within {
+  outline: 2px solid var(--chart-blue, #84b59a);
+  outline-offset: -2px;
+}
+
+.theme-picker svg {
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.theme-picker select {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.theme-sun,
+[data-theme="dark"] .theme-moon {
+  display: none;
+}
+
+[data-theme="dark"] .theme-sun {
+  display: block;
+}
+
+[data-theme="dark"] .topbar {
+  background: rgb(17 24 21 / 96%);
+}
+
+[data-theme="dark"] .button.primary {
+  background: var(--lime);
+  color: #192313;
+}
+
+[data-theme="dark"] .button.primary:hover {
+  background: #cce683;
+}
+
+[data-theme="dark"] :is(.button.secondary, .sleep-night-nav, .medical-prompts button) {
+  background: var(--surface-quiet);
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+
+[data-theme="dark"] :is(.button.secondary:hover, .sleep-night-nav:hover:not(:disabled), .medical-prompts button:hover) {
+  background: var(--surface-raised);
+}
+
+[data-theme="dark"] :is(.chart-range, .chart-legend button:hover, .icon-button, .sleep-rolling-control, .sleep-custom-range, .chart-legend .sleep-overlay-control) {
+  background: var(--surface-quiet);
+  color: var(--muted);
+}
+
+[data-theme="dark"] :is(.trend-toggle.active, .chart-range button.active, .training-calendar-day.active, .sleep-night-strip button:hover, .metric-info-button:hover, .metric-info-button:focus-visible) {
+  background: var(--surface-raised);
+  color: var(--ink);
+}
+
+[data-theme="dark"] .trend-toggle.active {
+  border-color: var(--line-strong);
+}
+
+[data-theme="dark"] :is(.trend-window-select, .sleep-rolling-control select, .sleep-custom-range input, .sleep-selectors select, .filters input, .filters select, #tag-form input, #tag-form select, #tag-form textarea, .chart-controls > select, .option-row select, .inline-field select, .night-picker input) {
+  background: var(--card);
+  border-color: var(--line-strong);
+  color: var(--ink);
+}
+
+[data-theme="dark"] .sleep-rolling-control select:disabled {
+  color: var(--muted);
+  opacity: 0.65;
+}
+
+[data-theme="dark"] :is(.chart-options > .disclosure-body, .chart-tooltip, .toast) {
+  background: var(--surface-raised);
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+  box-shadow: 0 8px 30px rgb(0 0 0 / 35%);
+}
+
+[data-theme="dark"] :is(.training-calendar-workouts > span, .training-calendar-rest, .eyebrow, .trend-toggle, .chart-range button:not(.active), .sleep-overlay-control select, .sleep-rolling-control > span, .sleep-custom-range span, .sleep-verdict-copy > p:last-of-type, .metric-label, .metric-label > span, .metric-info-dialog > p, .metric-info-dialog ul, #tag-form label > span) {
+  color: var(--muted);
+}
+
+[data-theme="dark"] :is(.training-calendar-day, .sleep-night-strip button, .sleep-glance-card) {
+  border-top-color: var(--line-strong);
+}
+
+[data-theme="dark"] :is(.training-calendar-day:not(.active), .sleep-night-strip button:not(:hover), .sleep-pattern-empty, .sleep-factor, .association-bar, .sleep-history-table button:hover, .metric-info-dialog .metric-info-note) {
+  background: var(--surface-quiet);
+}
+
+[data-theme="dark"] .training-calendar-day.latest {
+  box-shadow: inset 0 0 0 1px var(--mint-border);
+}
+
+[data-theme="dark"] :is(.training-calendar-workouts b, .activity-icon) {
+  background: #2e3c23;
+  color: #cee992;
+}
+
+[data-theme="dark"] .training-calendar-strip {
+  scrollbar-color: var(--line-strong) transparent;
+}
+
+[data-theme="dark"] .sleep-night-strip button.active {
+  border-color: var(--mint-ink);
+}
+
+[data-theme="dark"] :is(.sleep-night-strip button.good, .sleep-glance-card.support) {
+  border-top-color: #99bf61;
+}
+
+[data-theme="dark"] .sleep-night-strip button.fair {
+  border-top-color: #e3ad60;
+}
+
+[data-theme="dark"] :is(.sleep-night-strip button.poor, .sleep-glance-card.headwind) {
+  border-top-color: #de947a;
+}
+
+[data-theme="dark"] .sleep-score-badge {
+  border-color: var(--line-strong);
+}
+
+[data-theme="dark"] .sleep-verdict.good .sleep-score-badge {
+  border-color: #4e6234;
+}
+
+[data-theme="dark"] .sleep-verdict.fair .sleep-score-badge {
+  border-color: #675030;
+}
+
+[data-theme="dark"] .sleep-verdict.poor .sleep-score-badge {
+  border-color: #654237;
+}
+
+[data-theme="dark"] :is(.low-hr-score-badge, .sleep-quick-metrics .low-hr-metric, .metric-score-scale) {
+  border-color: var(--mint-border);
+  background: var(--mint-surface);
+  color: var(--mint-ink);
+}
+
+[data-theme="dark"] :is(.metric-info-button, .metric-score-scale span + span) {
+  border-color: var(--mint-border);
+}
+
+[data-theme="dark"] :is(.text-button, .metric-info-button, .metric-score-scale strong, .metric-score-scale i, .low-hr-score-badge strong, .low-hr-score-badge i, .low-hr-score-badge small, .sleep-quick-metrics .low-hr-metric strong) {
+  color: var(--mint-ink);
+}
+
+[data-theme="dark"] .sleep-association-list article > strong.positive {
+  color: #b9da83;
+}
+
+[data-theme="dark"] :is(.text-button.danger, .sleep-association-list article > strong.negative, .chart-tooltip em, .form-error, .fatal-error span) {
+  color: var(--danger-ink);
+}
+
+[data-theme="dark"] .fatal-error {
+  background: #362522;
+  border-color: #805346;
+}
+
+[data-theme="dark"] .chart-hover-dot {
+  background: var(--card);
+  box-shadow: 0 0 0 2px var(--card), 0 2px 5px rgb(0 0 0 / 38%);
+}
+
+[data-theme="dark"] :is(.chart-legend i, .series-toggle i, .annotation-table article > i) {
+  --series-swatch: var(--series-swatch-dark);
+}
+
+[data-theme="dark"] .section-tabs button[aria-current="page"] {
+  border-bottom-color: var(--mint-ink);
+}

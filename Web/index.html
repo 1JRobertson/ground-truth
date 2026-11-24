@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src ground-truth://dashboard; style-src ground-truth://dashboard 'unsafe-inline'; img-src ground-truth://dashboard data:; connect-src 'none'; frame-src 'none'; form-action 'none'; base-uri 'none'" />
+    <title>Ground Truth</title>
+    <script src="/theme.js"></script>
+    <link rel="stylesheet" href="/styles.css" />
+    <link rel="stylesheet" href="/theme.css" />
+    <link rel="stylesheet" href="/setup.css" />
+  </head>
+  <body>
+    <div class="app-shell" data-mode="setup">
+      <aside class="sidebar">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true"><i></i></span>
+          <span>Ground Truth</span>
+        </div>
+
+        <nav class="main-nav" aria-label="Main navigation">
+          <button class="nav-item active" data-view="overview" type="button" aria-label="Overview" title="Overview">
+            <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10H3Z"/><path d="M9 20v-7h6v7"/></svg></span><span>Overview</span>
+          </button>
+          <button class="nav-item" data-view="recovery" type="button" aria-label="Recovery" title="Recovery">
+            <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/><path d="M4 12h4l2-4 3 8 2-4h5"/></svg></span><span>Recovery</span>
+          </button>
+          <button class="nav-item" data-view="sleep" type="button" aria-label="Sleep" title="Sleep">
+            <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.9 13A9 9 0 0 1 11 3.1 9 9 0 1 0 20.9 13Z"/></svg></span><span>Sleep</span>
+          </button>
+          <button class="nav-item" data-view="training" type="button" aria-label="Training" title="Training">
+            <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m6 6 12 12M4 9l5-5M15 20l5-5M2 7l5-5M17 22l5-5"/></svg></span><span>Training</span>
+          </button>
+          <button class="nav-item" data-view="timeline" type="button" aria-label="History" title="History">
+            <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 11a9 9 0 1 1 2.6 7M3 4v7h7M12 7v5l3 2"/></svg></span><span>History</span>
+          </button>
+        </nav>
+
+        <div class="sidebar-foot">
+          <span class="status-dot"></span>
+          <div>
+            <span id="sidebar-sync">Loading…</span>
+          </div>
+        </div>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar">
+          <div>
+            <h1 id="view-title" tabindex="-1">Overview</h1>
+          </div>
+          <div class="topbar-actions">
+            <span class="demo-badge" id="demo-badge" hidden>Demo data</span>
+            <button class="button secondary" id="sync-button" type="button" data-native-action="sync" hidden>Sync now</button>
+            <button class="button secondary" id="settings-button" type="button" hidden>Garmin</button>
+          </div>
+        </header>
+
+        <p id="connection-message" class="connection-message" role="status" hidden></p>
+        <section id="app-view" class="view" aria-live="polite"></section>
+      </main>
+    </div>
+
+    <dialog id="garmin-dialog" aria-labelledby="garmin-dialog-title">
+      <header class="dialog-head">
+        <h2 id="garmin-dialog-title">Garmin connection</h2>
+        <form method="dialog"><button class="icon-button" aria-label="Close">×</button></form>
+      </header>
+      <div id="garmin-dialog-content"></div>
+      <p id="garmin-dialog-message" class="connection-message" role="status" hidden></p>
+    </dialog>
+    <div class="chart-tooltip" id="chart-tooltip" hidden></div>
+    <div class="toast" id="toast" hidden></div>
+
+    <script src="/chart-axis.js"></script>
+    <script src="/app.js"></script>
+  </body>
+</html>

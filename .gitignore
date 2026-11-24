@@ -1,0 +1,14 @@
+.DS_Store
+.env*
+.swiftpm/
+.build/
+dist/
+*.app/
+*.zip
+*.db
+*.sqlite
+*.sqlite3
+data/
+logs/
+garmin-snapshot.json
+.training/
