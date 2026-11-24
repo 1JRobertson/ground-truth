@@ -31,6 +31,7 @@ struct Dashboard: Codable {
 
     struct Activity: Codable {
         let date: String
+        let startTime: String?
         let name: String
         let type: String
         let durationMinutes: Double?
@@ -204,7 +205,8 @@ func normalizeDashboard(days: RecentDays, daily: GarminDaily, sleep: [GarminSlee
         guard rows[date] != nil, activityIDs.insert(item.activityId).inserted else { return nil }
         let type = item.activityType?.typeKey?.replacingOccurrences(of: "_", with: " ").capitalized ?? "Activity"
         let name = item.activityName?.trimmingCharacters(in: .whitespacesAndNewlines)
-        return Dashboard.Activity(date: date, name: name.flatMap { $0.isEmpty ? nil : String($0.prefix(256)) } ?? type,
+        return Dashboard.Activity(date: date, startTime: localActivityTime(item.startTimeLocal),
+                                  name: name.flatMap { $0.isEmpty ? nil : String($0.prefix(256)) } ?? type,
                                   type: type, durationMinutes: valid(item.duration, in: 0...604_800).map { $0 / 60 },
                                   distanceKm: valid(item.distance, in: 0...10_000_000).map { $0 / 1000 },
                                   averageHr: valid(item.averageHR, in: 20...250),
@@ -221,6 +223,13 @@ func normalizeDashboard(days: RecentDays, daily: GarminDaily, sleep: [GarminSlee
     return Dashboard(latestDate: days.last, historySeries: series, activities: activityRows,
                      coverage: .init(earliestDate: days.first, latestDate: days.last, dailyRecords: dailyCount,
                                      sleepRecords: sleepCount, hrvRecords: hrvCount, activities: activityRows.count))
+}
+
+private func localActivityTime(_ timestamp: String) -> String? {
+    let suffix = timestamp.dropFirst(10)
+    guard let time = suffix.range(of: #"^[T ](?:[01][0-9]|2[0-3]):[0-5][0-9](?=:|$)"#,
+                                  options: .regularExpression) else { return nil }
+    return String(suffix[time].dropFirst())
 }
 
 private func valid(_ value: Double?, in range: ClosedRange<Double>) -> Double? {

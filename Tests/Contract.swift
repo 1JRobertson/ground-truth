@@ -109,9 +109,10 @@ struct ContractTests {
                    "Daily fields did not map")
         try expect(result.historySeries[29].steps == nil && result.historySeries[0].sleepScore == nil,
                    "Missing and sentinel values must stay absent")
-        try expect(result.activities.count == 1 && result.activities[0].durationMinutes == 30 &&
+        try expect(result.activities.count == 1 && result.activities[0].startTime == "17:00" &&
+                   result.activities[0].durationMinutes == 30 &&
                    result.activities[0].distanceKm == 3.9 && result.activities[0].type == "Trail Running",
-                   "Activity mapping, units, or de-duplication failed")
+                   "Activity start time, mapping, units, or de-duplication failed")
         try expect(result.coverage.dailyRecords == 1 && result.coverage.hrvRecords == 1 && result.coverage.sleepRecords == 2,
                    "Coverage counts metadata, undated records, or gaps")
         let serialized = String(decoding: try JSONEncoder().encode(result), as: UTF8.self)
@@ -126,7 +127,10 @@ struct ContractTests {
         let store = SnapshotStore(directory: directory)
         let id = UUID()
         try store.write(.init(connectionID: id, syncedAt: .now, data: data))
-        try expect(store.read(connectionID: id)?.data.activities.count == 1, "Saved data did not restore")
+        try expect(store.read(connectionID: id)?.data.activities.first?.startTime == "17:00", "Saved activity start time did not restore")
+        let legacy = try JSONDecoder().decode(Dashboard.Activity.self,
+            from: Data(#"{"date":"2024-07-29","name":"Demo jog","type":"Trail Running"}"#.utf8))
+        try expect(legacy.startTime == nil, "A snapshot saved before the start time change must remain readable")
         try expect(store.read(connectionID: UUID()) == nil, "A different account can read the saved snapshot")
         let attributes = try FileManager.default.attributesOfItem(atPath: directory.appendingPathComponent("garmin-snapshot.json").path)
         try expect(attributes[.posixPermissions] as? Int == 0o600, "Snapshot permissions are too broad")

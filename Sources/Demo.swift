@@ -36,10 +36,11 @@ func demoDashboard(now: Date = .now) -> Dashboard {
             row.sleepEndTimestamp = nil
         }
         if index % 3 != 1 {
-            let examples = [("Easy run", "Running"), ("Strength session", "Strength Training"),
-                            ("Evening ride", "Cycling"), ("Morning walk", "Walking")]
-            let (name, type) = examples[(index / 2) % examples.count]
-            activities.append(.init(date: date, name: name, type: type, durationMinutes: Double(29 + index % 28),
+            let examples = [("Easy run", "Running", "07:15"), ("Strength session", "Strength Training", "16:30"),
+                            ("Evening ride", "Cycling", "18:15"), ("Morning walk", "Walking", "09:45")]
+            let (name, type, startTime) = examples[(index / 2) % examples.count]
+            activities.append(.init(date: date, startTime: startTime, name: name, type: type,
+                                    durationMinutes: Double(29 + index % 28),
                                     distanceKm: type == "Strength Training" ? nil : 3.5 + Double(index % 9),
                                     averageHr: Double(112 + index % 39), trainingEffect: 2.1 + Double(index % 5) / 10))
         }

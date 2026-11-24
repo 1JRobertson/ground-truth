@@ -11,6 +11,7 @@ func runWebSmoke(_ web: WKWebView) {
             }
             _ = try await web.evaluateJavaScript("document.querySelector('[data-native-action=demo]').click()")
             try await waitFor(web, "document.querySelector('.app-shell').dataset.mode === 'demo' && document.querySelector('#overview-steps-chart') !== null")
+            try await waitFor(web, "document.querySelector('.activity-primary time')?.dateTime.endsWith('T18:15') === true")
             if let diagnostics = ProcessInfo.processInfo.environment["GROUND_TRUTH_SMOKE_IMAGES"] {
                 try await capture(web, directory: diagnostics, filename: "demo.png")
             }

@@ -14,6 +14,11 @@ const shortDateFormat = new Intl.DateTimeFormat("en-CA", {
   day: "numeric",
   timeZone: "UTC",
 });
+const activityTimeFormat = new Intl.DateTimeFormat(undefined, {
+  hour: "numeric",
+  minute: "2-digit",
+  timeZone: "UTC",
+});
 const weekdayFormat = new Intl.DateTimeFormat("en-CA", {
   weekday: "short",
   timeZone: "UTC",
@@ -368,18 +373,27 @@ function chartCard(id, title, subtitle, series) {
   `;
 }
 
+function activityDateTime(activity) {
+  const date = dateLabel(activity.date);
+  if (!activity.startTime) return date;
+  const start = `${activity.date}T${activity.startTime}`;
+  const time = new Date(`${start}:00Z`);
+  if (!Number.isFinite(time.getTime())) return date;
+  return `${date} · <time datetime="${escapeHtml(start)}">${activityTimeFormat.format(time)}</time>`;
+}
+
 function activityRows(activities, limit = activities.length) {
   if (!activities.length) {
     return `<div class="empty-state">No activities match this view.</div>`;
   }
-  return `<div class="activity-table-head" aria-hidden="true"><span>Activity</span><span>Time</span><span>Avg HR</span><span>Effect</span></div>` + activities
+  return `<div class="activity-table-head" aria-hidden="true"><span>Activity</span><span>Duration</span><span>Avg HR</span><span>Effect</span></div>` + activities
     .slice(0, limit)
     .map(
       (activity) => `
         <article class="activity-row">
           <div class="activity-primary">
             <strong>${escapeHtml(activity.name)}</strong>
-            <span>${String(activity.name).toLowerCase() === String(activity.type).toLowerCase() ? "" : `${escapeHtml(activity.type)} · `}${dateLabel(activity.date)}</span>
+            <span>${activityDateTime(activity)}${String(activity.name).toLowerCase() === String(activity.type).toLowerCase() ? "" : ` · ${escapeHtml(activity.type)}`}</span>
           </div>
           <div><strong>${durationLabel(activity.durationMinutes)}</strong><span class="sr-only">Duration</span></div>
           <div><strong>${activity.averageHr ? `${activity.averageHr} bpm` : "—"}</strong><span class="sr-only">Average heart rate</span></div>
