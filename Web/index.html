@@ -48,6 +48,7 @@
         <header class="topbar">
           <div>
             <h1 id="view-title" tabindex="-1">Overview</h1>
+            <p class="garmin-attribution" data-garmin-attribution hidden>Data source: Garmin</p>
           </div>
           <div class="topbar-actions">
             <span class="demo-badge" id="demo-badge" hidden>Demo data</span>
@@ -63,7 +64,10 @@
 
     <dialog id="garmin-dialog" aria-labelledby="garmin-dialog-title">
       <header class="dialog-head">
-        <h2 id="garmin-dialog-title">Garmin connection</h2>
+        <div>
+          <h2 id="garmin-dialog-title">Garmin connection</h2>
+          <p class="garmin-attribution" data-garmin-attribution hidden>Data source: Garmin</p>
+        </div>
         <form method="dialog"><button class="icon-button" aria-label="Close">×</button></form>
       </header>
       <div id="garmin-dialog-content"></div>

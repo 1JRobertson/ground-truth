@@ -64,6 +64,12 @@
   margin-bottom: 1.2rem;
 }
 
+.garmin-attribution {
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
 #garmin-dialog-message:not([hidden]) {
   margin: 1rem 0 0;
 }

@@ -13,9 +13,19 @@ func runWebSmoke(_ web: WKWebView) {
             try await waitFor(web, "document.querySelector('.app-shell').dataset.mode === 'demo' && document.querySelector('#overview-steps-chart') !== null")
             try await waitFor(web, "document.querySelector('.activity-primary time')?.dateTime.endsWith('T18:15') === true")
             try await waitFor(web, "document.querySelector('.activity-row > div:nth-child(2) strong')?.textContent === '30m 15s'")
+            try await waitFor(web, "document.querySelector('.topbar [data-garmin-attribution]').hidden")
             if let diagnostics = ProcessInfo.processInfo.environment["GROUND_TRUTH_SMOKE_IMAGES"] {
                 try await capture(web, directory: diagnostics, filename: "demo.png")
             }
+
+            _ = try await web.evaluateJavaScript("connection = { ...connection, mode: 'garmin', connected: true }; renderConnection();")
+            try await waitFor(web, "document.querySelector('.topbar [data-garmin-attribution]').offsetHeight > 0")
+            if let diagnostics = ProcessInfo.processInfo.environment["GROUND_TRUTH_SMOKE_IMAGES"] {
+                try await capture(web, directory: diagnostics, filename: "synced-fixture.png")
+            }
+            _ = try await web.evaluateJavaScript("document.querySelector('#settings-button').click()")
+            try await waitFor(web, "document.querySelector('#garmin-dialog [data-garmin-attribution]').offsetHeight > 0")
+            _ = try await web.evaluateJavaScript("document.querySelector('#garmin-dialog').close(); connection = { ...connection, mode: 'demo', connected: false }; renderConnection();")
 
             let views: [(String, String)] = [
                 ("recovery", "#recovery-score-chart"),

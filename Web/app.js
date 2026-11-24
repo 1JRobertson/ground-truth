@@ -1754,7 +1754,11 @@ function renderConnection() {
 
   if (connection.data) loadData(structuredClone(connection.data), mode);
   else state.data = null;
-  if (mode === "garmin" && emptySnapshot()) appShell.dataset.mode = "empty";
+  const hasRecords = Boolean(state.data) && !emptySnapshot();
+  if (mode === "garmin" && !hasRecords) appShell.dataset.mode = "empty";
+  document.querySelectorAll("[data-garmin-attribution]").forEach((label) => {
+    label.hidden = mode !== "garmin" || !hasRecords;
+  });
 
   if (mode === "setup" && !connection.connected) {
     document.querySelector("#view-title").textContent = "Connect Garmin";
@@ -1764,7 +1768,7 @@ function renderConnection() {
         <p class="setup-privacy">Your imported data stays on this Mac.</p>
         <div class="setup-demo"><button type="button" class="button secondary" data-native-action="demo">Try demo</button></div>
       </section>`;
-  } else if (!state.data || emptySnapshot()) {
+  } else if (!hasRecords) {
     document.querySelector("#view-title").textContent = "Overview";
     appView.innerHTML = `
       <section class="setup-card">
