@@ -212,6 +212,15 @@ function durationLabel(minutes) {
   return `${hours}h${remainder ? ` ${remainder}m` : ""}`;
 }
 
+function activityDurationLabel(minutes) {
+  if (!Number.isFinite(minutes)) return "—";
+  const totalSeconds = Math.round(minutes * 60);
+  if (totalSeconds < 60) return `${totalSeconds}s`;
+  const elapsed = durationLabel(Math.floor(totalSeconds / 60));
+  const seconds = totalSeconds % 60;
+  return seconds ? `${elapsed} ${seconds}s` : elapsed;
+}
+
 function average(values) {
   const present = values.filter((value) => Number.isFinite(value));
   if (!present.length) return null;
@@ -395,7 +404,7 @@ function activityRows(activities, limit = activities.length) {
             <strong>${escapeHtml(activity.name)}</strong>
             <span>${activityDateTime(activity)}${String(activity.name).toLowerCase() === String(activity.type).toLowerCase() ? "" : ` · ${escapeHtml(activity.type)}`}</span>
           </div>
-          <div><strong>${durationLabel(activity.durationMinutes)}</strong><span class="sr-only">Duration</span></div>
+          <div><strong>${activityDurationLabel(activity.durationMinutes)}</strong><span class="sr-only">Duration</span></div>
           <div><strong>${activity.averageHr ? `${activity.averageHr} bpm` : "—"}</strong><span class="sr-only">Average heart rate</span></div>
           <div><strong>${Number.isFinite(activity.trainingEffect) ? activity.trainingEffect.toFixed(1) : "—"}</strong><span class="sr-only">Training effect</span></div>
         </article>
@@ -455,7 +464,7 @@ function trainingCalendar() {
               day.activities.map((activity) => activity.durationMinutes),
             );
             const title = day.activities.length
-              ? `${dateLabel(day.date)} · ${day.activities.map((activity) => `${activity.name || activity.type} (${durationLabel(activity.durationMinutes)})`).join(" · ")}`
+              ? `${dateLabel(day.date)} · ${day.activities.map((activity) => `${activity.name || activity.type} (${activityDurationLabel(activity.durationMinutes)})`).join(" · ")}`
               : `${dateLabel(day.date)} · No recorded activity`;
             return `
               <article

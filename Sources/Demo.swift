@@ -40,7 +40,7 @@ func demoDashboard(now: Date = .now) -> Dashboard {
                             ("Evening ride", "Cycling", "18:15"), ("Morning walk", "Walking", "09:45")]
             let (name, type, startTime) = examples[(index / 2) % examples.count]
             activities.append(.init(date: date, startTime: startTime, name: name, type: type,
-                                    durationMinutes: Double(29 + index % 28),
+                                    durationMinutes: Double(29 + index % 28) + Double(index % 4) / 4,
                                     distanceKm: type == "Strength Training" ? nil : 3.5 + Double(index % 9),
                                     averageHr: Double(112 + index % 39), trainingEffect: 2.1 + Double(index % 5) / 10))
         }
